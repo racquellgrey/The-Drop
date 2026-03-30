@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .card {
+    background: white;
+    padding: 30px;
+    width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    text-align: center;
+  }
+  
+  h1 {
+    margin-bottom: 8px;
+  }
+  
+  h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #555;
+    font-weight: normal;
+  }
+  
+  #status {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  .connected {
+    color: green;
+  }
+  
+  .disconnected {
+    color: red;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }

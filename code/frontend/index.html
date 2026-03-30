@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Drop Connection Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>The Drop</h1>
+    <h2>Database Connection Demo</h2>
+
+    <p id="status" class="disconnected">Status: Not Connected</p>
+    <p id="message">Click a button to test the database connection.</p>
+
+    <div class="buttons">
+      <button onclick="openConnection()">Open Connection</button>
+      <button onclick="closeConnection()">Close Connection</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
