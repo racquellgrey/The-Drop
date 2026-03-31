@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retailer Login | The Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      border: 0.5px solid var(--border2);
+      padding: 2.5rem;
+      background: var(--surface);
+    }
+    .login-logo { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.25rem; }
+    .login-subtitle { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .form-input { width: 100%; background: var(--bg); border: 0.5px solid var(--border2); color: var(--text); padding: 10px 12px; font-family: var(--font-mono); font-size: 13px; border-radius: 3px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--accent); }
+    .login-btn { width: 100%; background: var(--accent); border: none; color: var(--bg); padding: 12px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em; font-weight: 500; cursor: pointer; border-radius: 3px; margin-top: 0.5rem; transition: background 0.2s; }
+    .login-btn:hover { background: var(--text); }
+    .login-error { font-family: var(--font-mono); font-size: 11px; color: #ff4444; margin-top: 1rem; display: none; }
+    .login-footer { margin-top: 1.5rem; font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-align: center; }
+    .login-footer a { color: var(--accent); text-decoration: none; cursor: pointer; }
+    .retailer-badge { display: inline-block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.15em; padding: 3px 8px; background: var(--border2); color: var(--muted); border-radius: 2px; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="drop-root">
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-logo">THE DROP</div>
+        <div class="retailer-badge">RETAILER PORTAL</div>
+        <div class="login-subtitle">Sign in to manage your store</div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="login-email" placeholder="admin@yourstore.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="login-password" placeholder="••••••••" />
+        </div>
+
+        <button class="login-btn" onclick="handleLogin()">SIGN IN</button>
+        <div class="login-error" id="login-error">Invalid email or password.</div>
+
+        <div class="login-footer">
+          <a href="index.html">Back to home</a> &nbsp;·&nbsp;
+          <a href="login.html">Buyer login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    if (localStorage.getItem('drop_retailer')) {
+      window.location.href = 'retailer-dashboard.html';
+    }
+
+    async function handleLogin() {
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const errEl    = document.getElementById('login-error');
+      errEl.style.display = 'none';
+
+      if (!email || !password) {
+        errEl.textContent = 'Please enter your email and password.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res  = await fetch('/api/retailer/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('drop_retailer', JSON.stringify(data.retailer));
+          window.location.href = 'retailer-dashboard.html';
+        } else {
+          errEl.textContent = data.message || 'Invalid email or password.';
+          errEl.style.display = 'block';
+        }
+      } catch {
+        errEl.textContent = 'Could not reach the server.';
+        errEl.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  </script>
+</body>
+</html>

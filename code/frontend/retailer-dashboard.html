@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retailer Dashboard | The Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="retailer-dashboard.css" />
+</head>
+<body>
+  <div class="drop-root">
+
+    <nav class="drop-nav">
+      <div class="drop-logo"><a href="index.html" style="text-decoration:none;color:inherit">THE DROP</a></div>
+      <div class="drop-nav-links">
+        <a href="#products" onclick="showTab('products')">Products</a>
+        <a href="#drops" onclick="showTab('drops')">Drops</a>
+        <a href="#orders" onclick="showTab('orders')">Orders</a>
+      </div>
+      <div class="drop-nav-actions">
+        <span class="dash-user-label" id="nav-retailer">—</span>
+        <button class="btn-ghost" onclick="handleLogout()">Log out</button>
+      </div>
+    </nav>
+
+    <!-- PRODUCTS TAB -->
+    <div class="tab-content" id="tab-products">
+      <div class="r-wrap">
+
+        <!-- Product form -->
+        <div class="r-panel">
+          <div class="r-panel-header">
+            <span class="r-panel-title" id="product-form-title">Add Product</span>
+            <button class="btn-ghost" id="product-cancel-btn" onclick="resetProductForm()" style="display:none;font-size:11px">Cancel</button>
+          </div>
+          <div class="r-form">
+            <input type="hidden" id="product-id" />
+            <div class="r-form-row">
+              <div class="r-form-group">
+                <label class="r-label">Name</label>
+                <input class="r-input" type="text" id="product-name" placeholder="Air Jordan 1 Retro High OG" />
+              </div>
+              <div class="r-form-group">
+                <label class="r-label">Brand</label>
+                <input class="r-input" type="text" id="product-brand" placeholder="Jordan" />
+              </div>
+            </div>
+            <div class="r-form-row">
+              <div class="r-form-group">
+                <label class="r-label">SKU</label>
+                <input class="r-input" type="text" id="product-sku" placeholder="AJ1-RETRO-001" />
+              </div>
+              <div class="r-form-group">
+                <label class="r-label">Price ($)</label>
+                <input class="r-input" type="number" id="product-price" placeholder="180.00" step="0.01" />
+              </div>
+            </div>
+            <div class="r-form-group">
+              <label class="r-label">Colorway</label>
+              <input class="r-input" type="text" id="product-colorway" placeholder="Chicago Red / White / Black" />
+            </div>
+            <div class="r-form-group">
+              <label class="r-label">Description</label>
+              <textarea class="r-input r-textarea" id="product-description" placeholder="Product description..."></textarea>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="saveProduct()">SAVE PRODUCT</button>
+            <div class="r-feedback" id="product-feedback"></div>
+          </div>
+        </div>
+
+        <!-- Product list -->
+        <div class="r-panel r-panel-wide">
+          <div class="r-panel-header">
+            <span class="r-panel-title">Your Products</span>
+            <span class="r-panel-sub" id="product-count">—</span>
+          </div>
+          <div id="products-table">
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DROPS TAB -->
+    <div class="tab-content" id="tab-drops" style="display:none">
+      <div class="r-wrap">
+
+        <!-- Drop form -->
+        <div class="r-panel">
+          <div class="r-panel-header">
+            <span class="r-panel-title" id="drop-form-title">Create Drop</span>
+            <button class="btn-ghost" id="drop-cancel-btn" onclick="resetDropForm()" style="display:none;font-size:11px">Cancel</button>
+          </div>
+          <div class="r-form">
+            <input type="hidden" id="drop-id" />
+            <div class="r-form-group">
+              <label class="r-label">Drop Name</label>
+              <input class="r-input" type="text" id="drop-name" placeholder="SNKRS Chicago Day" />
+            </div>
+            <div class="r-form-group">
+              <label class="r-label">Description</label>
+              <textarea class="r-input r-textarea" id="drop-description" placeholder="Describe this drop event..."></textarea>
+            </div>
+            <div class="r-form-row">
+              <div class="r-form-group">
+                <label class="r-label">Start Date & Time</label>
+                <input class="r-input" type="datetime-local" id="drop-start" />
+              </div>
+              <div class="r-form-group">
+                <label class="r-label">End Date & Time</label>
+                <input class="r-input" type="datetime-local" id="drop-end" />
+              </div>
+            </div>
+            <div class="r-form-group">
+              <label class="r-label">Status</label>
+              <select class="r-input" id="drop-status">
+                <option value="upcoming">Upcoming</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="saveDrop()">SAVE DROP</button>
+            <div class="r-feedback" id="drop-feedback"></div>
+          </div>
+        </div>
+
+        <!-- Drop list -->
+        <div class="r-panel r-panel-wide">
+          <div class="r-panel-header">
+            <span class="r-panel-title">Your Drops</span>
+            <span class="r-panel-sub" id="drop-count">—</span>
+          </div>
+          <div id="drops-table">
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab-content" id="tab-orders" style="display:none">
+      <div class="r-wrap-single">
+        <div class="r-panel" style="width:100%">
+          <div class="r-panel-header">
+            <span class="r-panel-title">Orders</span>
+            <span class="r-panel-sub" id="orders-count">—</span>
+          </div>
+          <div id="orders-table">
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px;margin-bottom:1px"></div>
+            <div class="skeleton-card" style="height:60px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="dash-toast" id="toast"></div>
+
+    <!-- Confirm modal -->
+    <div class="r-modal-backdrop" id="modal-backdrop" style="display:none">
+      <div class="r-modal">
+        <div class="r-modal-title" id="modal-title">Confirm Delete</div>
+        <div class="r-modal-body" id="modal-body">Are you sure?</div>
+        <div class="r-modal-actions">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="r-btn-danger" id="modal-confirm-btn">Delete</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="retailer-dashboard.js"></script>
+</body>
+</html>

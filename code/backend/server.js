@@ -237,6 +237,140 @@ app.get("/api/purchases/:user_id", async (req, res) => {
   }
 });
 
+// POST /api/retailer/login
+app.post('/api/retailer/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const [rows] = await connection.query(
+      'SELECT retailer_id, name, email FROM retailer WHERE email = ? AND password_hash = ?',
+      [email, password]
+    );
+    if (!rows.length) return res.json({ success: false, message: 'Invalid email or password.' });
+    res.json({ success: true, retailer: rows[0] });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/retailer/:id/products
+app.get('/api/retailer/:id/products', async (req, res) => {
+  try {
+    const [rows] = await connection.query(
+      'SELECT * FROM product WHERE retailer_id = ? ORDER BY created_at DESC',
+      [req.params.id]
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/retailer/products — create product
+app.post('/api/retailer/products', async (req, res) => {
+  const { name, brand, sku, price, colorway, description, retailer_id } = req.body;
+  try {
+    const [result] = await connection.query(
+      'INSERT INTO product (retailer_id, sku, name, brand, colorway, price, description) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [retailer_id, sku, name, brand, colorway || null, price, description || null]
+    );
+    res.json({ success: true, product_id: result.insertId });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// PUT /api/retailer/products/:id — update product
+app.put('/api/retailer/products/:id', async (req, res) => {
+  const { name, brand, sku, price, colorway, description } = req.body;
+  try {
+    await connection.query(
+      'UPDATE product SET name = ?, brand = ?, sku = ?, price = ?, colorway = ?, description = ? WHERE product_id = ?',
+      [name, brand, sku, price, colorway || null, description || null, req.params.id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// DELETE /api/retailer/products/:id
+app.delete('/api/retailer/products/:id', async (req, res) => {
+  try {
+    await connection.query('DELETE FROM product WHERE product_id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/retailer/:id/drops
+app.get('/api/retailer/:id/drops', async (req, res) => {
+  try {
+    const [rows] = await connection.query(
+      'SELECT * FROM drop_event WHERE retailer_id = ? ORDER BY drop_start_at DESC',
+      [req.params.id]
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/retailer/drops — create drop
+app.post('/api/retailer/drops', async (req, res) => {
+  const { name, description, drop_start_at, drop_end_at, status, retailer_id } = req.body;
+  try {
+    const [result] = await connection.query(
+      'INSERT INTO drop_event (retailer_id, name, description, drop_start_at, drop_end_at, status) VALUES (?, ?, ?, ?, ?, ?)',
+      [retailer_id, name, description || null, drop_start_at, drop_end_at || null, status]
+    );
+    res.json({ success: true, drop_id: result.insertId });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// PUT /api/retailer/drops/:id — update drop
+app.put('/api/retailer/drops/:id', async (req, res) => {
+  const { name, description, drop_start_at, drop_end_at, status } = req.body;
+  try {
+    await connection.query(
+      'UPDATE drop_event SET name = ?, description = ?, drop_start_at = ?, drop_end_at = ?, status = ? WHERE drop_id = ?',
+      [name, description || null, drop_start_at, drop_end_at || null, status, req.params.id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// DELETE /api/retailer/drops/:id
+app.delete('/api/retailer/drops/:id', async (req, res) => {
+  try {
+    await connection.query('DELETE FROM drop_event WHERE drop_id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/retailer/:id/orders
+app.get('/api/retailer/:id/orders', async (req, res) => {
+  try {
+    const [rows] = await connection.query(`
+      SELECT pu.*, p.name AS product_name, u.email AS buyer_email
+      FROM purchase pu
+      JOIN product p ON pu.product_id = p.product_id
+      JOIN users u ON pu.user_id = u.user_id
+      WHERE pu.retailer_id = ?
+      ORDER BY pu.purchased_at DESC
+    `, [req.params.id]);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── START ─────────────────────────────────────────────────────
 
 initDB().then(() => {
