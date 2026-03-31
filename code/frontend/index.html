@@ -3,23 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Drop Connection Demo</title>
+  <title>The Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="card">
-    <h1>The Drop</h1>
-    <h2>Database Connection Demo</h2>
+  <div class="drop-root">
 
-    <p id="status" class="disconnected">Status: Not Connected</p>
-    <p id="message">Click a button to test the database connection.</p>
+    <nav class="drop-nav">
+      <div class="drop-logo">THE DROP</div>
+      <div class="drop-nav-links">
+        <a href="#drops">Drops</a>
+        <a href="#products">Products</a>
+        <a href="#retailers">Retailers</a>
+      </div>
+      <div class="drop-nav-actions">
+        <button class="btn-ghost">Log in</button>
+        <button class="btn-solid">Sign up</button>
+      </div>
+    </nav>
 
-    <div class="buttons">
-      <button onclick="openConnection()">Open Connection</button>
-      <button onclick="closeConnection()">Close Connection</button>
+    <div class="drop-ticker">
+      <div class="drop-ticker-inner" id="ticker-inner">Loading drops...</div>
     </div>
-  </div>
 
+    <div class="drop-hero">
+      <div class="drop-hero-eyebrow">CS 4604 · Spring 2026</div>
+      <div class="drop-hero-title">Never<br>Miss<br><span>A Drop.</span></div>
+      <p class="drop-hero-sub">One platform for every limited release. Track drops, get notified, and secure your pair before it sells out.</p>
+      <div class="drop-hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('drops').scrollIntoView({behavior:'smooth'})">BROWSE DROPS</button>
+        <span class="drop-hero-cta-sub" id="live-count">Loading...</span>
+      </div>
+    </div>
+
+    <section class="drop-section" id="drops">
+      <div class="drop-section-label">Upcoming drops</div>
+      <div class="drop-events" id="drop-events-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+    <section class="drop-section" id="products">
+      <div class="drop-section-label">Featured products</div>
+      <div class="drop-grid" id="products-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+    <section class="drop-section">
+      <div class="drop-stats">
+        <div class="drop-stat">
+          <div class="drop-stat-num" id="stat-products">—</div>
+          <div class="drop-stat-label">Products listed</div>
+        </div>
+        <div class="drop-stat">
+          <div class="drop-stat-num" id="stat-retailers">—</div>
+          <div class="drop-stat-label">Active retailers</div>
+        </div>
+        <div class="drop-stat">
+          <div class="drop-stat-num" id="stat-drops">—</div>
+          <div class="drop-stat-label">Drops scheduled</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="drop-footer">
+      <div class="drop-footer-logo">THE DROP</div>
+      <div class="drop-footer-copy">CS 4604 · Jit · Grey · McKay · Wallace · Spring 2026</div>
+    </footer>
+
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
