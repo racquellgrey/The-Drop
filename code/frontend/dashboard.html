@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | The Drop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div class="drop-root">
+      <nav class="drop-nav">
+        <div class="drop-logo">
+          <a href="index.html" style="text-decoration: none; color: inherit"
+            >THE DROP</a
+          >
+        </div>
+        <div class="drop-nav-links">
+          <a href="index.html">Home</a>
+          <a href="dashboard.html" style="color: var(--accent)">Dashboard</a>
+        </div>
+        <div class="drop-nav-actions">
+          <span class="dash-user-label" id="nav-username">—</span>
+          <button class="btn-ghost" onclick="handleLogout()">Log out</button>
+        </div>
+      </nav>
+
+      <div class="dash-wrap">
+        <!-- LEFT: Available drops + cart -->
+        <div class="dash-main">
+          <!-- Browse drops to request -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <span class="dash-panel-title">Available Drops</span>
+              <span class="dash-panel-sub"
+                >Select a drop to request early access</span
+              >
+            </div>
+            <div id="drops-list">
+              <div
+                class="skeleton-card"
+                style="height: 80px; margin-bottom: 1px"
+              ></div>
+              <div
+                class="skeleton-card"
+                style="height: 80px; margin-bottom: 1px"
+              ></div>
+              <div class="skeleton-card" style="height: 80px"></div>
+            </div>
+          </div>
+
+          <!-- Browse products to add to cart -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <span class="dash-panel-title">Products</span>
+              <span class="dash-panel-sub">Add items to your cart</span>
+            </div>
+            <div class="dash-products-grid" id="products-list">
+              <div class="skeleton-card" style="height: 120px"></div>
+              <div class="skeleton-card" style="height: 120px"></div>
+              <div class="skeleton-card" style="height: 120px"></div>
+              <div class="skeleton-card" style="height: 120px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Cart + My Requests -->
+        <div class="dash-sidebar">
+          <!-- Cart -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <span class="dash-panel-title">Cart</span>
+              <span class="dash-panel-sub" id="cart-count">0 items</span>
+            </div>
+            <div id="cart-items">
+              <div class="dash-empty">Your cart is empty.</div>
+            </div>
+            <div class="cart-footer" id="cart-footer" style="display: none">
+              <div class="cart-total">
+                <span class="cart-total-label">Total</span>
+                <span class="cart-total-val" id="cart-total">$0.00</span>
+              </div>
+              <button
+                class="btn-primary"
+                style="width: 100%"
+                onclick="checkout()"
+              >
+                CHECKOUT
+              </button>
+            </div>
+          </div>
+
+          <!-- My Requests -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <span class="dash-panel-title">My Requests</span>
+              <span class="dash-panel-sub">Drop access requests</span>
+            </div>
+            <div id="requests-list">
+              <div class="dash-empty">No requests yet.</div>
+            </div>
+          </div>
+
+          <!-- Purchase History -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <span class="dash-panel-title">Purchase History</span>
+              <span class="dash-panel-sub">Your past orders</span>
+            </div>
+            <div id="purchases-list">
+              <div class="dash-empty">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast notification -->
+      <div class="dash-toast" id="toast"></div>
+    </div>
+    <script src="dashboard.js"></script>
+  </body>
+</html>
