@@ -14,7 +14,10 @@ INSERT INTO `retailer` (`name`, `email`, `password_hash`, `website`, `location`)
 ('Adidas',      'admin@adidas.com',      'hashed_pw_2', 'https://www.adidas.com',      'Portland, OR'),
 ('Foot Locker', 'admin@footlocker.com',  'hashed_pw_3', 'https://www.footlocker.com',  'New York, NY'),
 ('SNKRS',       'admin@snkrs.com',       'hashed_pw_4', 'https://www.nike.com/launch', 'Beaverton, OR'),
-('StockX',      'admin@stockx.com',      'hashed_pw_5', 'https://www.stockx.com',      'Detroit, MI');
+('StockX',      'admin@stockx.com',      'hashed_pw_5', 'https://www.stockx.com',      'Detroit, MI'),
+('New Balance', 'admin@newbalance.com',  'hashed_pw_6', 'https://www.newbalance.com',  'Boston, MA'),
+('Puma',        'admin@puma.com',        'hashed_pw_7', 'https://www.puma.com',        'Somerville, MA'),
+('GOAT',        'admin@goat.com',        'hashed_pw_8', 'https://www.goat.com',        'Culver City, CA');
 
 -- ============================================================
 -- USERS
