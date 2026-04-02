@@ -57,7 +57,7 @@ INSERT INTO `product` (`retailer_id`, `sku`, `name`, `brand`, `colorway`, `price
 (3, 'AF1-LOW-WHITE',          'Air Force 1 Low White',           'Nike',        'White/White',                 90.00, 'The classic all-white Air Force 1 Low, a timeless staple.'),
 (4, 'AJ3-RETRO-FIRE-RED',     'Air Jordan 3 Retro Fire Red',     'Jordan',      'White/Fire Red/Cement Grey', 200.00, 'A retro classic — the Fire Red AJ3 returns in OG form.'),
 (2, 'ULTRA-BOOST-22',         'Adidas Ultraboost 22',            'Adidas',      'Core Black/Carbon',          190.00, 'High-performance running shoe with responsive Boost cushioning.'),
-(6, 'NEW-BALANCE-550-WH',     'New Balance 550 White Green',     'New Balance', 'White/Green',                110.00, 'Retro basketball-inspired silhouette with a clean finish.'),
+(3, 'NEW-BALANCE-550-WH',     'New Balance 550 White Green',     'New Balance', 'White/Green',                110.00, 'Retro basketball-inspired silhouette with a clean finish.'),
 (1, 'AJ11-RETRO-JUBILEE',     'Air Jordan 11 Retro Jubilee',     'Jordan',      'Black/Metallic Silver',      220.00, 'Celebrating 25 years of the iconic Air Jordan 11.'),
 (7, 'PUMA-SUEDE-CLASSIC',     'Puma Suede Classic',              'Puma',        'Black/White',                 70.00, 'A timeless streetwear icon with a soft suede upper and clean design.'),
 (8, 'YEEZY-500-BLUSH',        'Yeezy 500 Blush',                 'Adidas',      'Blush/Tan',                  200.00, 'Minimalist neutral tones on the chunky Yeezy 500 silhouette.'),
@@ -68,7 +68,8 @@ INSERT INTO `product` (`retailer_id`, `sku`, `name`, `brand`, `colorway`, `price
 (6, 'NB-990V5-GREY',          'New Balance 990v5 Grey',          'New Balance', 'Grey/Silver',                185.00, 'Premium comfort and heritage style in the iconic 990 series.'),
 (8, 'DUNK-HIGH-CHAMPIONSHIP', 'Nike Dunk High Championship',     'Nike',        'Navy/White',                 125.00, 'Classic two-tone color blocking on the Dunk High silhouette.'),
 (5, 'AJ13-RETRO-FLINT',       'Air Jordan 13 Retro Flint',       'Jordan',      'Flint Grey/White/Navy',      210.00, 'A fan-favorite retro featuring reflective mesh and premium suede.'),
-(7, 'PUMA-FUTURE-RIDER',      'Puma Future Rider Play On',       'Puma',        'Grey/Green/Orange',           80.00, 'Lightweight sneaker with a retro running aesthetic and modern comfort.');
+(7, 'PUMA-FUTURE-RIDER',      'Puma Future Rider Play On',       'Puma',        'Grey/Green/Orange',           80.00, 'Lightweight sneaker with a retro running aesthetic and modern comfort.'),
+(1, 'DUNK-LOW-RETRO-EMERALD', 'Nike Dunk Low Retro Emerald',     'Nike',        'Emerald Rise/Hydrangeas/Yellow Pulse',   130.00,  'Vibrant colorway on a retro style Nike Dunk Low.');
 
 -- ============================================================
 -- DROP EVENTS
@@ -97,7 +98,7 @@ INSERT INTO `availability_schedule` (`drop_id`, `retailer_id`, `product_id`, `av
 (2, 2, 12, '2026-04-05 09:00:00', '2026-04-05 18:00:00', 600,  TRUE),
 -- Nike Dunk Week
 (3, 1, 5,  '2026-04-10 10:00:00', '2026-04-17 23:59:00', 2000, TRUE),
-(3, 1, 5,  '2026-04-11 10:00:00', '2026-04-13 23:59:00', 1500, TRUE),
+(3, 1, 21, '2026-04-11 10:00:00', '2026-04-13 23:59:00', 1500, TRUE),
 (3, 1, 18, '2026-04-14 10:00:00', '2026-04-17 23:59:00', 1300, TRUE),
 -- Foot Locker Friday
 (4, 3, 6,  '2026-03-28 12:00:00', '2026-03-28 14:00:00', 300,  FALSE),
@@ -253,27 +254,54 @@ INSERT INTO `notification` (`user_id`, `schedule_id`, `notification_type`, `chan
 -- PURCHASES
 -- ============================================================
 INSERT INTO `purchase` (`user_id`, `retailer_id`, `schedule_id`, `qty`, `total_amount`, `purchase_status`) VALUES
-(1, 4, 1, 1, 180.00, 'delivered'),
-(2, 4, 1, 1, 180.00, 'delivered'),
-(4, 2, 2, 1, 220.00, 'shipped'),
-(6, 1, 4, 1, 110.00, 'confirmed'),
-(7, 3, 5, 1,  90.00, 'delivered'),
-(1, 4, 6, 1, 200.00, 'pending'),
-(3, 4, 7, 1, 210.00, 'confirmed'),
-(5, 4, 8, 1, 220.00, 'pending');
+(1,  4,  1, 1, 180.00, 'delivered'),
+(2,  4,  1, 1, 180.00, 'delivered'),
+(4,  2,  2, 1, 220.00, 'shipped'),
+(6,  2,  4, 1, 200.00, 'confirmed'),
+(7,  1,  5, 1, 110.00, 'delivered'),
+  
+(1,  3,  6, 1, 200.00, 'pending'),
+(3,  1,  7, 1, 130.00, 'confirmed'),
+(5,  3,  8, 1,  90.00, 'pending'),
+(8,  3,  9, 1, 110.00, 'delivered'),
+(9,  4, 10, 1, 200.00, 'shipped'),
+  
+(10, 4, 11, 1, 210.00, 'delivered'),
+(11, 4, 12, 1, 220.00, 'confirmed'),
+(12, 2,  2, 1, 220.00, 'delivered'),
+(13, 2,  3, 1, 300.00, 'shipped'),
+(14, 1,  5, 1, 110.00, 'confirmed'),
+  
+(15, 1,  5, 1, 110.00, 'delivered'),
+(16, 3,  8, 1,  90.00, 'pending'),
+(17, 1,  7, 1, 130.00, 'delivered'),
+(18, 1,  6, 1, 200.00, 'confirmed'),
+(19, 3,  8, 1,  90.00, 'cancelled');
 
 -- ============================================================
 -- PAYMENTS
 -- ============================================================
 INSERT INTO `payment` (`purchase_id`, `amount`, `method`, `payment_status`, `transaction_id`) VALUES
-(1, 180.00, 'credit_card', 'completed', 'TXN-001-AJ1-JORDAN'),
-(2, 180.00, 'paypal',      'completed', 'TXN-002-AJ1-MAYA'),
-(3, 220.00, 'apple_pay',   'completed', 'TXN-003-YEEZY-PRIYA'),
-(4, 110.00, 'debit_card',  'completed', 'TXN-004-DUNK-SOPHIA'),
-(5,  90.00, 'credit_card', 'completed', 'TXN-005-AF1-TYLER'),
-(6, 200.00, 'google_pay',  'pending',   'TXN-006-AJ3-JORDAN'),
-(7, 210.00, 'credit_card', 'completed', 'TXN-007-AJ4-DEVON'),
-(8, 220.00, 'paypal',      'pending',   'TXN-008-AJ11-MARCUS');
+(1,  180.00,  'credit_card', 'completed', 'TXN-001-JORDAN'),
+(2,  180.00,  'paypal',      'completed', 'TXN-002-MAYA'),
+(3,  220.00,  'apple_pay',   'completed', 'TXN-003-PRIYA'),
+(4,  200.00,  'debit_card',  'completed', 'TXN-004-SOPHIA'),
+(5,  110.00,  'credit_card', 'completed', 'TXN-005-TYLER'),
+(6,  200.00,  'google_pay',  'pending',   'TXN-006-JORDAN'),
+(7,  130.00,  'credit_card', 'completed', 'TXN-007-DEVON'),
+(8,   90.00,  'google_pay',  'completed', 'TXN-008-MARCUS'),
+(9,  110.00,  'paypal',      'pending',   'TXN-009-AISHA'),
+(10, 200.00,  'debit_card',  'pending',   'TXN-010-CHARLOTTE'),
+(11, 210.00,  'apple_pay',   'completed', 'TXN-011-MARCUS'),
+(12, 220.00,  'credit_card', 'completed', 'TXN-012-LILA'),
+(13, 220.00,  'credit_card', 'completed', 'TXN-013-ZARA'),
+(14, 300.00,  'paypal',      'completed', 'TXN-014-ETHAN'),
+(15, 110.00,  'google_pay',  'pending',   'TXN-015-NAOMI'),
+(16, 110.00,  'credit_card', 'completed', 'TXN-016-CALEB'),
+(17,  90.00,  'debit_card',  'completed', 'TXN-017-ABIGAIL'),
+(18, 130.00,  'paypal',      'pending',   'TXN-018-LUCAS'),
+(19, 200.00,  'apple_pay',   'pending',   'TXN-019-ELIZA'),
+(20,  90.00,  'credit_card', 'completed', 'TXN-020-TRISTAN');
 
 -- ============================================================
 -- FEEDBACK
@@ -281,9 +309,12 @@ INSERT INTO `payment` (`purchase_id`, `amount`, `method`, `payment_status`, `tra
 INSERT INTO `feedback` (`user_id`, `product_id`, `purchase_id`, `text`) VALUES
 (1, 1, 1, 'Absolute grails. Worth every penny — the quality on these is unmatched.'),
 (2, 1, 2, 'Sizing runs a little small, go half a size up. But the shoe itself is perfect.'),
-(4, 3, 3, 'Yeezy quality is always consistent. The Zebra colorway goes with everything.'),
-(6, 5, 4, 'Clean shoe, great for everyday wear. The Panda is a classic for a reason.'),
-(7, 6, 5, 'Can never go wrong with an all-white AF1. Timeless and comfortable.');
+(7, 5, 5, 'Nike Dunk quality is always consistent. The Panda colorway goes with everything.'),
+(8, 9, 9, 'Clean shoe, great for everyday wear. A green and white New Balance is a classic for a reason.'),
+(10, 2, 11, 'The Thunder color is so distinct. I get complements everywhere I go!'),
+(12, 3, 13, 'Super comfortable right out of the box. The materials feel premium and durable.'),
+(15, 5, 16, 'Classic look that never goes out of style. Great value for the price.'),
+(17, 18, 18, 'The new Dunk Highs definitely live up to the hype. Unique design and very comfy.');
 
 -- ============================================================
 -- RATINGS
@@ -291,6 +322,9 @@ INSERT INTO `feedback` (`user_id`, `product_id`, `purchase_id`, `text`) VALUES
 INSERT INTO `rating` (`user_id`, `product_id`, `purchase_id`, `stars`) VALUES
 (1, 1, 1, 5),
 (2, 1, 2, 4),
-(4, 3, 3, 5),
-(6, 5, 4, 5),
-(7, 6, 5, 4);
+(7, 5, 5, 5),
+(8, 9, 9, 4),
+(10, 2, 11, 5),
+(12, 3, 13, 5),
+(15, 5, 16, 4),
+(17, 18, 18, 5);
