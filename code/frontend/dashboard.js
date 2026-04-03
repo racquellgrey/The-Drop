@@ -5,7 +5,7 @@
    ============================================================ */
 
    let currentUser = null;
-   let cart = [];
+   let cart = JSON.parse(localStorage.getItem('drop_cart') || '[]');
    let myRequests = [];
    
    // ── AUTH ─────────────────────────────────────────────────────
@@ -18,6 +18,7 @@
      }
      currentUser = JSON.parse(stored);
      document.getElementById('nav-username').textContent = currentUser.username || currentUser.email;
+     renderCart();
      loadDrops();
      loadProducts();
      loadMyRequests();
@@ -113,9 +114,11 @@
    
        el.innerHTML = data.map(p => `
          <div class="dash-product-card">
-           <div class="dash-product-brand">${p.brand}</div>
-           <div class="dash-product-name">${p.name}</div>
-           <div class="dash-product-colorway">${p.colorway || ''}</div>
+           <div class="dash-product-card-info" onclick="window.location.href='product.html?id=${p.product_id}'" style="cursor:pointer;" title="View details">
+             <div class="dash-product-brand">${p.brand}</div>
+             <div class="dash-product-name">${p.name}</div>
+             <div class="dash-product-colorway">${p.colorway || ''}</div>
+           </div>
            <div class="dash-product-footer">
              <span class="dash-product-price">$${parseFloat(p.price).toFixed(2)}</span>
              <button class="btn-add" onclick="addToCart(${p.product_id}, '${p.name.replace(/'/g,"\\'")}', ${p.price})">+ ADD</button>
@@ -166,6 +169,7 @@
      const countEl = document.getElementById('cart-count');
      const totalEl = document.getElementById('cart-total');
    
+     localStorage.setItem('drop_cart', JSON.stringify(cart));
      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
      const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
    
@@ -206,6 +210,7 @@
        const data = await res.json();
        if (data.success) {
          cart = [];
+         localStorage.removeItem('drop_cart');
          renderCart();
          loadPurchaseHistory();
          showToast('Order placed successfully!');

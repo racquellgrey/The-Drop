@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — The Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="product.css" />
+</head>
+<body>
+  <div class="drop-root">
+
+    <nav class="drop-nav">
+      <div class="drop-logo"><a href="index.html" style="text-decoration:none;color:inherit;">THE DROP</a></div>
+      <div class="drop-nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#drops">Drops</a>
+        <a href="index.html#products">Products</a>
+      </div>
+      <div class="drop-nav-actions" id="nav-actions" style="position:relative">
+        <div id="login-dropdown" style="display:none; position:absolute; top:110%; right:60px; background:var(--surface); border:0.5px solid var(--border2); border-radius:3px; min-width:160px; z-index:100;">
+          <div onclick="window.location.href='login.html'" style="padding:10px 16px; font-family:var(--font-mono); font-size:11px; color:var(--muted2); cursor:pointer; letter-spacing:0.08em; border-bottom:0.5px solid var(--border);">BUYER</div>
+          <div onclick="window.location.href='retailer-login.html'" style="padding:10px 16px; font-family:var(--font-mono); font-size:11px; color:var(--muted2); cursor:pointer; letter-spacing:0.08em;">RETAILER</div>
+        </div>
+        <button class="btn-ghost" onclick="toggleDropdown()">Log in</button>
+        <button class="btn-solid" onclick="window.location.href='login.html'">Sign up</button>
+      </div>
+    </nav>
+
+    <div class="product-wrap" id="product-container">
+
+      <!-- breadcrumb -->
+      <div class="product-breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">·</span>
+        <a href="index.html#products">Products</a>
+        <span class="breadcrumb-sep">·</span>
+        <span id="product-breadcrumb-name">Loading…</span>
+      </div>
+
+      <!-- product hero -->
+      <div class="product-hero" id="product-hero">
+        <div class="product-image-wrap">
+          <div class="product-image-placeholder" id="product-image-block">
+            <span class="product-image-icon">👟</span>
+          </div>
+        </div>
+
+        <div class="product-info">
+          <div class="product-brand"   id="product-brand">—</div>
+          <div class="product-name"    id="product-name">Loading…</div>
+          <div class="product-colorway" id="product-colorway"></div>
+          <div class="product-price"   id="product-price">—</div>
+          <div class="product-meta">
+            <span class="product-meta-label">Retailer</span>
+            <span id="product-retailer">—</span>
+          </div>
+          <div class="product-meta">
+            <span class="product-meta-label">SKU</span>
+            <span id="product-sku">—</span>
+          </div>
+          <div class="product-description" id="product-description"></div>
+          <div class="product-actions" id="product-actions">
+            <!-- rendered by JS based on auth state -->
+          </div>
+        </div>
+      </div>
+
+      <!-- reviews section -->
+      <div class="product-reviews-section">
+        <div class="reviews-header">
+          <div class="reviews-title">Reviews</div>
+          <div class="reviews-summary" id="reviews-summary">
+            <span class="skeleton-inline"></span>
+          </div>
+        </div>
+
+        <!-- review form (injected by JS if eligible) -->
+        <div id="review-form-container"></div>
+
+        <!-- review list -->
+        <div id="reviews-list">
+          <div class="skeleton-card" style="height:80px;margin-bottom:1px"></div>
+          <div class="skeleton-card" style="height:80px;margin-bottom:1px"></div>
+          <div class="skeleton-card" style="height:80px"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="drop-footer">
+      <div class="drop-footer-logo">THE DROP</div>
+      <div class="drop-footer-copy">CS 4604 · Jit · Grey · McKay · Wallace · Spring 2026</div>
+    </footer>
+
+  </div>
+
+  <div class="dash-toast" id="toast"></div>
+
+  <script src="nav.js"></script>
+  <script src="product.js"></script>
+</body>
+</html>

@@ -91,17 +91,17 @@
          return;
        }
    
-       grid.innerHTML = data.map(p => `
-         <div class="drop-card">
-           <div class="drop-card-brand">${p.brand}</div>
-           <div class="drop-card-name">${p.name}</div>
-           <div class="drop-card-colorway">${p.colorway || ''}</div>
-           <div class="drop-card-footer">
-             <span class="drop-card-price">$${parseFloat(p.price).toFixed(2)}</span>
-             <span class="drop-card-badge badge-soon">${p.retailer_name || ''}</span>
-           </div>
-         </div>
-       `).join('');
+      grid.innerHTML = data.map(p => `
+        <div class="drop-card" onclick="window.location.href='product.html?id=${p.product_id}'" title="View ${p.name}">
+          <div class="drop-card-brand">${p.brand}</div>
+          <div class="drop-card-name">${p.name}</div>
+          <div class="drop-card-colorway">${p.colorway || ''}</div>
+          <div class="drop-card-footer">
+            <span class="drop-card-price">$${parseFloat(p.price).toFixed(2)}</span>
+            <span class="drop-card-badge badge-soon">${p.retailer_name || ''}</span>
+          </div>
+        </div>
+      `).join('');
      } catch {
        grid.innerHTML = '<p class="drop-error">Failed to load products. Is the server running?</p>';
      }

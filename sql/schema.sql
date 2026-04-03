@@ -118,13 +118,15 @@ CREATE TABLE `purchase` (
   `user_id`         INT           NOT NULL,
   `retailer_id`     INT           NOT NULL,
   `schedule_id`     INT           NOT NULL,
+  `product_id`      INT           NOT NULL,
   `qty`             INT           NOT NULL DEFAULT 1,
   `total_amount`    DECIMAL(10,2) NOT NULL,
   `purchase_status` ENUM('pending', 'confirmed', 'shipped', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
   `purchased_at`    DATETIME      DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `purchase_ibfk_1` FOREIGN KEY (`user_id`)     REFERENCES `users`                 (`user_id`),
   CONSTRAINT `purchase_ibfk_2` FOREIGN KEY (`retailer_id`) REFERENCES `retailer`              (`retailer_id`),
-  CONSTRAINT `purchase_ibfk_3` FOREIGN KEY (`schedule_id`) REFERENCES `availability_schedule` (`schedule_id`)
+  CONSTRAINT `purchase_ibfk_3` FOREIGN KEY (`schedule_id`) REFERENCES `availability_schedule` (`schedule_id`),
+  CONSTRAINT `purchase_ibfk_4` FOREIGN KEY (`product_id`)  REFERENCES `product`               (`product_id`)
 );
 
 -- ============================================================

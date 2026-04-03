@@ -100,6 +100,132 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
+// GET /api/products/:id — single product detail
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const [[product]] = await connection.query(`
+      SELECT p.*, r.name AS retailer_name
+      FROM product p
+      JOIN retailer r ON p.retailer_id = r.retailer_id
+      WHERE p.product_id = ?
+    `, [req.params.id]);
+    if (!product) return res.status(404).json({ error: "Product not found." });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/products/:id/reviews — all ratings + feedback for a product
+app.get("/api/products/:id/reviews", async (req, res) => {
+  try {
+    const [reviews] = await connection.query(`
+      SELECT
+        u.user_id,
+        u.username,
+        u.first_name,
+        u.last_name,
+        rt.stars,
+        rt.purchase_id,
+        rt.created_at AS rated_at,
+        f.text        AS feedback_text,
+        f.created_at  AS feedback_at
+      FROM rating rt
+      JOIN users u ON rt.user_id = u.user_id
+      LEFT JOIN feedback f
+        ON f.user_id = rt.user_id
+       AND f.product_id = rt.product_id
+       AND f.purchase_id = rt.purchase_id
+      WHERE rt.product_id = ?
+      ORDER BY rt.created_at DESC
+    `, [req.params.id]);
+
+    const [[{ avg_stars, review_count }]] = await connection.query(
+      "SELECT AVG(stars) AS avg_stars, COUNT(*) AS review_count FROM rating WHERE product_id = ?",
+      [req.params.id]
+    );
+
+    res.json({ reviews, avg_stars: parseFloat(avg_stars) || 0, review_count: parseInt(review_count) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/products/:id/reviews — submit a rating + optional feedback
+app.post("/api/products/:id/reviews", async (req, res) => {
+  const { user_id, purchase_id, stars, text } = req.body;
+  const product_id = req.params.id;
+
+  if (!user_id || !purchase_id || stars == null) {
+    return res.status(400).json({ success: false, message: "user_id, purchase_id, and stars are required." });
+  }
+  if (stars < 1 || stars > 5) {
+    return res.status(400).json({ success: false, message: "Stars must be between 1 and 5." });
+  }
+
+  try {
+    // Verify the user actually purchased this product
+    const [purchases] = await connection.query(
+      "SELECT purchase_id FROM purchase WHERE purchase_id = ? AND user_id = ? AND product_id = ?",
+      [purchase_id, user_id, product_id]
+    );
+    if (!purchases.length) {
+      return res.json({ success: false, message: "You must purchase this product before reviewing it." });
+    }
+
+    // Check for duplicate rating
+    const [existing] = await connection.query(
+      "SELECT rating_id FROM rating WHERE user_id = ? AND product_id = ? AND purchase_id = ?",
+      [user_id, product_id, purchase_id]
+    );
+    if (existing.length) {
+      return res.json({ success: false, message: "You have already reviewed this purchase." });
+    }
+
+    await connection.query(
+      "INSERT INTO rating (user_id, product_id, purchase_id, stars) VALUES (?, ?, ?, ?)",
+      [user_id, product_id, purchase_id, stars]
+    );
+
+    if (text && text.trim()) {
+      await connection.query(
+        "INSERT INTO feedback (user_id, product_id, purchase_id, text) VALUES (?, ?, ?, ?)",
+        [user_id, product_id, purchase_id, text.trim()]
+      );
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/products/:id/user-status/:user_id — purchase & review status for logged-in user
+app.get("/api/products/:id/user-status/:user_id", async (req, res) => {
+  const { id: product_id, user_id } = req.params;
+  try {
+    const [purchases] = await connection.query(
+      "SELECT purchase_id FROM purchase WHERE user_id = ? AND product_id = ? ORDER BY purchased_at DESC LIMIT 1",
+      [user_id, product_id]
+    );
+    const has_purchased = purchases.length > 0;
+    const purchase_id   = has_purchased ? purchases[0].purchase_id : null;
+
+    let has_reviewed = false;
+    if (has_purchased) {
+      const [ratings] = await connection.query(
+        "SELECT rating_id FROM rating WHERE user_id = ? AND product_id = ?",
+        [user_id, product_id]
+      );
+      has_reviewed = ratings.length > 0;
+    }
+
+    res.json({ has_purchased, purchase_id, has_reviewed });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/stats", async (req, res) => {
   try {
     const [[{ products }]]  = await connection.query("SELECT COUNT(*) AS products FROM product");

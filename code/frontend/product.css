@@ -1,0 +1,421 @@
+/* ============================================================
+   The Drop — product.css
+   Product detail page styles
+   ============================================================ */
+
+.product-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 2rem 5rem;
+}
+
+/* ── BREADCRUMB ───────────────────────────────────────────── */
+.product-breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.product-breadcrumb a:hover { color: var(--muted2); }
+
+.breadcrumb-sep { color: var(--border2); }
+
+/* ── PRODUCT HERO ─────────────────────────────────────────── */
+.product-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 5rem;
+  align-items: start;
+}
+
+@media (max-width: 680px) {
+  .product-hero {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* image panel */
+.product-image-wrap {
+  position: sticky;
+  top: 5rem;
+}
+
+.product-image-placeholder {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 4px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-image-icon {
+  font-size: 5rem;
+  opacity: 0.2;
+}
+
+/* info panel */
+.product-brand {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.product-name {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.product-colorway {
+  font-size: 13px;
+  color: var(--muted2);
+  margin-bottom: 1.25rem;
+}
+
+.product-price {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.product-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--muted2);
+  margin-bottom: 0.4rem;
+}
+
+.product-meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 52px;
+}
+
+.product-description {
+  font-size: 14px;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 0.5px solid var(--border);
+}
+
+/* action buttons */
+.product-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-add-cart {
+  background: var(--accent);
+  border: none;
+  color: var(--bg);
+  padding: 14px 28px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-weight: 500;
+  border-radius: 3px;
+  transition: all 0.2s;
+  flex: 1;
+}
+.btn-add-cart:hover { background: var(--text); }
+
+.btn-view-dash {
+  background: transparent;
+  border: 0.5px solid var(--border2);
+  color: var(--muted2);
+  padding: 14px 20px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-view-dash:hover { border-color: var(--text); color: var(--text); }
+
+.product-action-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+/* ── REVIEWS SECTION ──────────────────────────────────────── */
+.product-reviews-section {
+  border-top: 0.5px solid var(--border);
+  padding-top: 3rem;
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.reviews-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted2);
+}
+
+.stars-display {
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+
+.reviews-avg {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.reviews-count {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.skeleton-inline {
+  display: inline-block;
+  width: 120px;
+  height: 14px;
+  background: var(--surface);
+  border-radius: 2px;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── REVIEW FORM ──────────────────────────────────────────── */
+.review-form {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.review-form-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted2);
+  margin-bottom: 1.25rem;
+}
+
+.star-picker {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.15s, transform 0.1s;
+  padding: 0;
+  line-height: 1;
+}
+.star-btn:hover,
+.star-btn.active { color: var(--accent); }
+.star-btn:hover  { transform: scale(1.15); }
+
+.review-textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 0.5px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+  border-radius: 3px;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+.review-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.review-textarea::placeholder { color: var(--muted); }
+
+.review-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.review-stars-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+/* ── REVIEW NOTE (login / already reviewed / must purchase) ── */
+.review-note {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  padding: 1rem 1.25rem;
+  border: 0.5px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 2rem;
+}
+
+.review-note a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.review-note a:hover { text-decoration: underline; }
+
+/* ── REVIEW CARDS ─────────────────────────────────────────── */
+.review-card {
+  padding: 1.25rem 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.review-card:first-child { border-top: none; }
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.review-username {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.review-stars {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+.review-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+}
+
+.review-text {
+  font-size: 14px;
+  color: var(--muted2);
+  line-height: 1.65;
+}
+
+.reviews-empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+/* ── TOAST ────────────────────────────────────────────────── */
+.dash-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  white-space: nowrap;
+  z-index: 9999;
+}
+.dash-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── ADDED TO CART BADGE ──────────────────────────────────── */
+.cart-added-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}

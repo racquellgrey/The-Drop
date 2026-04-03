@@ -177,7 +177,7 @@ INSERT INTO `requests` (`user_id`, `schedule_id`, `request_status`) VALUES
 (2, 19, 'pending'),
 (3, 20, 'approved'),
 (4, 20, 'approved'),
-(6, 21, 'approved')
+(6, 21, 'approved'),
 (7, 21, 'denied'),
 (9, 22, 'approved'),
 (10, 23, 'denied'),
@@ -187,7 +187,7 @@ INSERT INTO `requests` (`user_id`, `schedule_id`, `request_status`) VALUES
 (15, 25, 'approved'),
 (16, 26, 'pending'),
 (18, 27, 'approved'),
-(20, 27, 'denied'),
+(20, 27, 'denied');
 
 -- ============================================================
 -- NOTIFICATIONS
@@ -248,35 +248,46 @@ INSERT INTO `notification` (`user_id`, `schedule_id`, `notification_type`, `chan
 (15, 25, 'drop_live', 'push'),
 (16, 26, 'drop_reminder', 'sms'),
 (18, 27, 'drop_reminder', 'push'),
-(20, 27, 'restock_alert', 'sms'),
+(20, 27, 'restock_alert', 'sms');
 
 -- ============================================================
 -- PURCHASES
+-- schedule_id → product_id mapping (from availability_schedule):
+--   1→1, 2→3, 3→4, 4→12, 5→5, 6→21, 7→18, 8→6, 9→9
+--   10→7, 11→2, 12→10, 13→1, 14→14, 15→15, 16→11, 17→20
+--   18→17, 19→11, 20→12, 21→13, 22→6, 23→1, 24→2, 25→19
+--   26→8, 27→16
+-- Rows 1-20 preserved in original order so payment/feedback/rating FKs stay valid.
+-- Rows 21-22 are additional purchases for user_id=1 (jhayes) with product_id populated.
 -- ============================================================
-INSERT INTO `purchase` (`user_id`, `retailer_id`, `schedule_id`, `qty`, `total_amount`, `purchase_status`) VALUES
-(1,  4,  1, 1, 180.00, 'delivered'),
-(2,  4,  1, 1, 180.00, 'delivered'),
-(4,  2,  2, 1, 220.00, 'shipped'),
-(6,  2,  4, 1, 200.00, 'confirmed'),
-(7,  1,  5, 1, 110.00, 'delivered'),
-  
-(1,  3,  6, 1, 200.00, 'pending'),
-(3,  1,  7, 1, 130.00, 'confirmed'),
-(5,  3,  8, 1,  90.00, 'pending'),
-(8,  3,  9, 1, 110.00, 'delivered'),
-(9,  4, 10, 1, 200.00, 'shipped'),
-  
-(10, 4, 11, 1, 210.00, 'delivered'),
-(11, 4, 12, 1, 220.00, 'confirmed'),
-(12, 2,  2, 1, 220.00, 'delivered'),
-(13, 2,  3, 1, 300.00, 'shipped'),
-(14, 1,  5, 1, 110.00, 'confirmed'),
-  
-(15, 1,  5, 1, 110.00, 'delivered'),
-(16, 3,  8, 1,  90.00, 'pending'),
-(17, 1,  7, 1, 130.00, 'delivered'),
-(18, 1,  6, 1, 200.00, 'confirmed'),
-(19, 3,  8, 1,  90.00, 'cancelled');
+INSERT INTO `purchase` (`user_id`, `retailer_id`, `schedule_id`, `product_id`, `qty`, `total_amount`, `purchase_status`) VALUES
+(1,  4,  1,  1, 1, 180.00, 'delivered'),   -- #1  jhayes · AJ1 Chicago · SNKRS Chicago Day
+(2,  4,  1,  1, 1, 180.00, 'delivered'),   -- #2  maya
+(4,  2,  2,  3, 1, 220.00, 'shipped'),     -- #3  priya · Yeezy Zebra
+(6,  2,  4, 12, 1, 200.00, 'confirmed'),   -- #4  sophia · Yeezy 500 Blush
+(7,  1,  5,  5, 1, 110.00, 'delivered'),   -- #5  tyler · Dunk Low Panda
+
+(1,  1,  6, 21, 1, 130.00, 'pending'),     -- #6  jhayes · Dunk Low Emerald · Nike Dunk Week
+(3,  1,  7, 18, 1, 125.00, 'confirmed'),   -- #7  devon · Dunk High Championship
+(5,  3,  8,  6, 1,  90.00, 'pending'),     -- #8  marcus · AF1 Low White
+(8,  3,  9,  9, 1, 110.00, 'delivered'),   -- #9  aisha · NB 550 White Green
+(9,  4, 10,  7, 1, 200.00, 'shipped'),     -- #10 charlotte · AJ3 Fire Red
+
+(10, 4, 11,  2, 1, 210.00, 'delivered'),   -- #11 marcus.hale · AJ4 Thunder
+(11, 4, 12, 10, 1, 220.00, 'confirmed'),   -- #12 lila · AJ11 Jubilee
+(12, 2,  2,  3, 1, 220.00, 'delivered'),   -- #13 ethan · Yeezy Zebra
+(13, 2,  3,  4, 1, 300.00, 'shipped'),     -- #14 zara · Yeezy Waverunner
+(14, 1,  5,  5, 1, 110.00, 'confirmed'),   -- #15 naomi · Dunk Low Panda
+
+(15, 1,  5,  5, 1, 110.00, 'delivered'),   -- #16 caleb · Dunk Low Panda
+(16, 3,  8,  6, 1,  90.00, 'pending'),     -- #17 abby · AF1 Low White
+(17, 1,  7, 18, 1, 125.00, 'delivered'),   -- #18 lucas · Dunk High Championship
+(18, 1,  6, 21, 1, 130.00, 'confirmed'),   -- #19 eliza · Dunk Low Emerald
+(19, 3,  8,  6, 1,  90.00, 'cancelled'),   -- #20 tristan · AF1 Low White
+
+-- Additional purchases for jhayes (user_id=1) so their dashboard shows history
+(1,  1,  5,  5, 1, 110.00, 'delivered'),   -- #21 jhayes · Dunk Low Panda · Nike Dunk Week
+(1,  4, 12, 10, 1, 220.00, 'shipped');     -- #22 jhayes · AJ11 Retro Jubilee · Jordan Brand Spring Drop
 
 -- ============================================================
 -- PAYMENTS
@@ -301,7 +312,9 @@ INSERT INTO `payment` (`purchase_id`, `amount`, `method`, `payment_status`, `tra
 (17,  90.00,  'debit_card',  'completed', 'TXN-017-ABIGAIL'),
 (18, 130.00,  'paypal',      'pending',   'TXN-018-LUCAS'),
 (19, 200.00,  'apple_pay',   'pending',   'TXN-019-ELIZA'),
-(20,  90.00,  'credit_card', 'completed', 'TXN-020-TRISTAN');
+(20,  90.00,  'credit_card', 'completed', 'TXN-020-TRISTAN'),
+(21, 110.00,  'apple_pay',  'completed', 'TXN-021-JORDAN-DUNK'),
+(22, 220.00,  'credit_card', 'pending',  'TXN-022-JORDAN-AJ11');
 
 -- ============================================================
 -- FEEDBACK
