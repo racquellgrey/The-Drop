@@ -1,0 +1,13 @@
+# Environment secrets — never commit real credentials
+.env
+**/.env
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Editor settings (may contain saved credentials)
+.vscode/settings.json
+
+# macOS
+.DS_Store
