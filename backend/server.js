@@ -237,6 +237,52 @@ app.get("/api/stats", async (req, res) => {
   }
 });
 
+// POST /api/signup — create buyer account (password stored same way as /api/login for this demo)
+app.post("/api/signup", async (req, res) => {
+  const { email, username, password, first_name, last_name, phone } = req.body;
+  const emailTrim = typeof email === "string" ? email.trim() : "";
+  const userTrim = typeof username === "string" ? username.trim() : "";
+  const passStr = typeof password === "string" ? password : "";
+
+  if (!emailTrim || !userTrim || !passStr) {
+    return res.status(400).json({ success: false, message: "Email, username, and password are required." });
+  }
+  if (passStr.length < 6) {
+    return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+  }
+
+  try {
+    const [emailTaken] = await connection.query("SELECT user_id FROM users WHERE email = ?", [emailTrim]);
+    if (emailTaken.length) {
+      return res.json({ success: false, message: "An account with this email already exists." });
+    }
+    const [userTaken] = await connection.query("SELECT user_id FROM users WHERE username = ?", [userTrim]);
+    if (userTaken.length) {
+      return res.json({ success: false, message: "This username is already taken." });
+    }
+
+    const fn = typeof first_name === "string" ? first_name.trim() || null : null;
+    const ln = typeof last_name === "string" ? last_name.trim() || null : null;
+    const ph = typeof phone === "string" ? phone.trim() || null : null;
+
+    const [result] = await connection.query(
+      "INSERT INTO users (email, username, password_hash, first_name, last_name, phone) VALUES (?, ?, ?, ?, ?, ?)",
+      [emailTrim, userTrim, passStr, fn, ln, ph]
+    );
+
+    const [rows] = await connection.query(
+      "SELECT user_id, email, username, first_name, last_name FROM users WHERE user_id = ?",
+      [result.insertId]
+    );
+    res.json({ success: true, user: rows[0] });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      return res.json({ success: false, message: "Email or username is already in use." });
+    }
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // POST /api/login
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;

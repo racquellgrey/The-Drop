@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | The Drop</title>
+  <title>Sign up | The Drop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
@@ -17,7 +17,7 @@
     }
     .login-card {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       border: 0.5px solid var(--border2);
       padding: 2.5rem;
       background: var(--surface);
@@ -39,6 +39,14 @@
     .form-group {
       margin-bottom: 1.25rem;
     }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
     .form-label {
       display: block;
       font-family: var(--font-mono);
@@ -59,6 +67,7 @@
       border-radius: 3px;
       outline: none;
       transition: border-color 0.2s;
+      box-sizing: border-box;
     }
     .form-input:focus { border-color: var(--accent); }
     .login-btn {
@@ -103,50 +112,87 @@
     <div class="login-wrap">
       <div class="login-card">
         <div class="login-logo">THE DROP</div>
-        <div class="login-subtitle">Sign in to your account</div>
+        <div class="login-subtitle">Create your buyer account</div>
 
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First name</label>
+            <input class="form-input" type="text" id="signup-first" placeholder="Alex" autocomplete="given-name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last name</label>
+            <input class="form-input" type="text" id="signup-last" placeholder="Rivera" autocomplete="family-name" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" type="text" id="signup-username" placeholder="sneakerhead" autocomplete="username" />
+        </div>
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="login-email" placeholder="you@example.com" />
+          <input class="form-input" type="email" id="signup-email" placeholder="you@example.com" autocomplete="email" />
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input class="form-input" type="password" id="login-password" placeholder="••••••••" />
+          <input class="form-input" type="password" id="signup-password" placeholder="At least 6 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm password</label>
+          <input class="form-input" type="password" id="signup-password2" placeholder="Repeat password" autocomplete="new-password" />
         </div>
 
-        <button class="login-btn" onclick="handleLogin()">SIGN IN</button>
-        <div class="login-error" id="login-error">Invalid email or password.</div>
+        <button class="login-btn" type="button" onclick="handleSignup()">CREATE ACCOUNT</button>
+        <div class="login-error" id="signup-error"></div>
 
         <div class="login-footer">
-          Don't have an account? <a href="signup.html">Sign up</a> &nbsp;·&nbsp;
+          Already have an account? <a href="login.html">Sign in</a> &nbsp;·&nbsp;
           <a href="index.html">Back to home</a>
         </div>
       </div>
     </div>
   </div>
   <script>
-    // Redirect if already logged in
     if (localStorage.getItem('drop_user')) {
       window.location.href = 'dashboard.html';
     }
 
-    async function handleLogin() {
-      const email    = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value.trim();
-      const errEl    = document.getElementById('login-error');
+    async function handleSignup() {
+      const first_name = document.getElementById('signup-first').value.trim();
+      const last_name  = document.getElementById('signup-last').value.trim();
+      const username   = document.getElementById('signup-username').value.trim();
+      const email      = document.getElementById('signup-email').value.trim();
+      const password   = document.getElementById('signup-password').value;
+      const password2  = document.getElementById('signup-password2').value;
+      const errEl      = document.getElementById('signup-error');
       errEl.style.display = 'none';
 
-      if (!email || !password) {
-        errEl.textContent = 'Please enter your email and password.';
+      if (!username || !email || !password) {
+        errEl.textContent = 'Username, email, and password are required.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (password.length < 6) {
+        errEl.textContent = 'Password must be at least 6 characters.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (password !== password2) {
+        errEl.textContent = 'Passwords do not match.';
         errEl.style.display = 'block';
         return;
       }
 
       try {
-        const res  = await fetch('/api/login', {
+        const res = await fetch('/api/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({
+            email,
+            username,
+            password,
+            first_name: first_name || undefined,
+            last_name: last_name || undefined
+          })
         });
         const data = await res.json();
 
@@ -154,7 +200,7 @@
           localStorage.setItem('drop_user', JSON.stringify(data.user));
           window.location.href = 'dashboard.html';
         } else {
-          errEl.textContent = data.message || 'Invalid email or password.';
+          errEl.textContent = data.message || 'Could not create account.';
           errEl.style.display = 'block';
         }
       } catch {
@@ -164,7 +210,7 @@
     }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') handleLogin();
+      if (e.key === 'Enter') handleSignup();
     });
   </script>
 </body>
