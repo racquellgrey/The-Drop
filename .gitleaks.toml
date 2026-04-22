@@ -1,0 +1,29 @@
+title = "The Drop — gitleaks config"
+
+# Start from gitleaks' default ruleset and layer our own rules / allowlist.
+[extend]
+useDefault = true
+
+# Project-specific rules
+[[rules]]
+id = "thedrop-db-password-literal"
+description = "Hard-coded DB password literal in source"
+regex = '''(?i)(DB_PASSWORD|password_hash|password)\s*[:=]\s*["'](?!REPLACE_ME|replace_me|your_|\$\{|process\.env)[^"']{4,}["']'''
+tags = ["password", "thedrop"]
+
+[allowlist]
+description = "Paths and patterns we intentionally exclude"
+paths = [
+  '''(?i)\.env\.example$''',
+  '''(?i)\.vscode/settings\.example\.json$''',
+  '''(?i)db/seed\.sql$''',
+  '''(?i)db/schema\.sql$''',
+  '''(?i)docs/.*\.md$''',
+  '''(?i)README\.md$''',
+]
+# Allow clearly-fake placeholder passwords used in example files.
+regexes = [
+  '''REPLACE_ME_LOCAL_ONLY''',
+  '''your_mysql_password_here''',
+  '''replace_me_locally''',
+]

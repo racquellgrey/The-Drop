@@ -1,0 +1,37 @@
+# Keep deploys small and avoid shipping non-runtime assets.
+# Anything here is NOT uploaded to Vercel.
+
+# Source control / CI
+.git
+.github
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+
+# Local secrets (defense in depth — .env files must never leave the dev machine)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local DB assets — schema.sql & seed.sql are run against your managed DB
+# out-of-band, not from the serverless function.
+db/
+diagrams/
+docs/
+reports/
+role/
+
+# Node modules (Vercel installs on its own)
+node_modules/
+**/node_modules/
+
+# Logs & build artifacts
+*.log
+coverage/
+dist/
+build/

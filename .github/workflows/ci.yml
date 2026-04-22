@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Principle of least privilege: the token can only read repo contents.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # 1. Secret scan
+  #    Blocks the build if any credential pattern sneaks into a
+  #    commit before it ever reaches Vercel.
+  # ────────────────────────────────────────────────────────────
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          # gitleaks-action does NOT require a license for public repos.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
+          GITLEAKS_ENABLE_SUMMARY: "true"
+
+  # ────────────────────────────────────────────────────────────
+  # 2. Verify no .env files are tracked
+  # ────────────────────────────────────────────────────────────
+  verify-no-env:
+    name: Verify no .env tracked
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if any .env is tracked
+        run: |
+          set -e
+          tracked=$(git ls-files | grep -E '(^|/)\.env(\.|$)' | grep -v '\.env\.example$' || true)
+          if [ -n "$tracked" ]; then
+            echo "::error::Tracked .env files detected:"
+            echo "$tracked"
+            exit 1
+          fi
+          echo "OK: no .env files tracked."
+
+  # ────────────────────────────────────────────────────────────
+  # 3. Install, syntax check, and dependency audit
+  # ────────────────────────────────────────────────────────────
+  build-and-audit:
+    name: Install, syntax-check, audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend deps (ci, no scripts)
+        working-directory: backend
+        run: npm ci --ignore-scripts
+
+      - name: Node syntax check
+        working-directory: backend
+        run: npm run lint:syntax
+
+      - name: Require api/index.js loads without error
+        run: node --check api/index.js
+
+      - name: npm audit (high + critical)
+        working-directory: backend
+        run: npm audit --audit-level=high
+
+  # ────────────────────────────────────────────────────────────
+  # 4. Validate vercel.json schema
+  # ────────────────────────────────────────────────────────────
+  validate-vercel:
+    name: Validate vercel.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      - name: Parse vercel.json
+        run: node -e "JSON.parse(require('fs').readFileSync('vercel.json','utf8')); console.log('vercel.json is valid JSON')"

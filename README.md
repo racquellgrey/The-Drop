@@ -12,11 +12,24 @@ The Drop lets shoppers browse upcoming product drops, request access, and make p
 
 ```
 The-Drop/
-├── backend/          # Express API server
-├── frontend/         # Vanilla HTML/CSS/JS client
-└── db/
-    ├── schema.sql    # Table definitions
-    └── seed.sql      # Sample data
+├── api/
+│   └── index.js          # Vercel serverless entry (wraps backend/app.js)
+├── backend/
+│   ├── app.js            # Express app (exported, no listen)
+│   ├── server.js         # Local-only dev entry (listens on :5000)
+│   ├── db.js             # Pooled MySQL access (serverless-safe)
+│   └── .env.example      # Local env template — NEVER commit a real .env
+├── frontend/             # Vanilla HTML/CSS/JS client (served statically)
+├── db/
+│   ├── schema.sql        # Table definitions
+│   └── seed.sql          # Sample data
+├── docs/
+│   ├── DEPLOYMENT.md     # Step-by-step Vercel deploy guide
+│   └── SECURITY.md       # Secret-handling rules + defense-in-depth list
+├── .github/workflows/
+│   └── ci.yml            # Secret scan, audit, syntax check
+├── vercel.json           # Vercel routing, headers, function config
+└── .vercelignore         # Files NOT uploaded to Vercel
 ```
 
 ---
@@ -73,6 +86,42 @@ npm run dev      # uses nodemon for auto-reload
 npm start        # plain node
 ```
 
-The server will start at **http://localhost:5000**.
+The server will start at **http://localhost:5000**, serving the frontend
+statically and the API at `/api/*`.
+
+---
+
+## Deployment (Vercel)
+
+Full walk-through: **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**.
+
+Quick version:
+
+1. Provision a managed MySQL (Aiven / Railway / TiDB Cloud / RDS) with a
+   least-privilege user and TLS enabled.
+2. Import the repo on [vercel.com](https://vercel.com) — framework preset
+   "Other". `vercel.json` handles the rest.
+3. Add env vars in **Vercel → Settings → Environment Variables**
+   (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL=true`,
+   `ALLOWED_ORIGINS`). Mark `DB_PASSWORD` as Sensitive.
+4. Push to `main` — Vercel deploys automatically. Open a PR and Vercel
+   posts a Preview URL. GitHub Actions runs a secret scan and dependency
+   audit in parallel.
+
+No deploy token is ever stored in GitHub. Vercel's first-party Git
+integration handles auth, so even a compromised Action cannot leak
+`DB_PASSWORD`.
+
+---
+
+## Security
+
+See **[docs/SECURITY.md](docs/SECURITY.md)** for the full policy, including:
+
+- Rules for handling secrets in this public repository.
+- The defense-in-depth layers currently enforced (helmet, rate limits,
+  CORS allow-list, CSP, HSTS, TLS to the DB, parameterised queries, etc.).
+- Known limitations of this coursework demo and what would need to change
+  before a real-world launch.
 
 The frontend is served statically from the same port — open **http://localhost:5000** in your browser.
