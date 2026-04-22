@@ -10,7 +10,7 @@ The Drop lets shoppers browse upcoming product drops, request access, and make p
 
 ## Project Structure
 
-```
+```text
 The-Drop/
 ├── api/
 │   └── index.js          # Vercel serverless entry (wraps backend/app.js)
@@ -30,7 +30,7 @@ The-Drop/
 │   └── ci.yml            # Secret scan, audit, syntax check
 ├── vercel.json           # Vercel routing, headers, function config
 └── .vercelignore         # Files NOT uploaded to Vercel
-```
+```env
 
 ---
 
@@ -66,7 +66,7 @@ cp backend/.env.example backend/.env
 
 Open `backend/.env` and set your MySQL credentials:
 
-```
+```env
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
@@ -86,7 +86,7 @@ npm run dev      # uses nodemon for auto-reload
 npm start        # plain node
 ```
 
-The server will start at **http://localhost:5000**, serving the frontend
+The server will start at **[http://localhost:5000](http://localhost:5000)**, serving the frontend
 statically and the API at `/api/*`.
 
 ---
@@ -104,13 +104,22 @@ Quick version:
 3. Add env vars in **Vercel → Settings → Environment Variables**
    (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL=true`,
    `ALLOWED_ORIGINS`). Mark `DB_PASSWORD` as Sensitive.
-4. Push to `main` — Vercel deploys automatically. Open a PR and Vercel
-   posts a Preview URL. GitHub Actions runs a secret scan and dependency
-   audit in parallel.
+4. Add GitHub repository secrets so Actions can deploy to the exact Vercel
+   project:
+   - `VERCEL_TOKEN`
+   - `VERCEL_ORG_ID`
+   - `VERCEL_PROJECT_ID`
+5. Push to `main` for production deploys. Open a PR for preview deploys.
+   GitHub Actions now runs CI first, then deploys with Vercel CLI.
 
-No deploy token is ever stored in GitHub. Vercel's first-party Git
-integration handles auth, so even a compromised Action cannot leak
-`DB_PASSWORD`.
+You can get org/project IDs by running locally once in this repo:
+
+```bash
+vercel link
+cat .vercel/project.json
+```
+
+Then copy those values into GitHub Secrets and keep `.vercel/` untracked.
 
 ---
 
@@ -124,4 +133,4 @@ See **[docs/SECURITY.md](docs/SECURITY.md)** for the full policy, including:
 - Known limitations of this coursework demo and what would need to change
   before a real-world launch.
 
-The frontend is served statically from the same port — open **http://localhost:5000** in your browser.
+The frontend is served statically from the same port — open **[http://localhost:5000](http://localhost:5000)** in your browser.

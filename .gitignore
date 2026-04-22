@@ -43,3 +43,4 @@ Thumbs.db
 *.key
 *.p12
 *.pfx
+.env*.local
